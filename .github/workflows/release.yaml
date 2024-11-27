@@ -1,29 +1,31 @@
 name: Release
 
 on:
-  release:
-    types: [published]
+    release:
+        types: [published]
 
-# Use "trusted publishing", see https://docs.pypi.org/trusted-publishers/
 jobs:
-  release:
-    name: Upload release to PyPI
-    runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/dummy_repo_1111
-    permissions:
-      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          fetch-depth: 0
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
-          cache: "pip"
-      - run: pip install build
-      - run: python -m build
-      - name: Publish package distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+    release:
+        # requires that you have put your twine API key in your
+        # github secrets (see readme for details)
+        runs-on: ubuntu-latest
+        if: contains(github.ref, 'tags')
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            - name: Set up Python 3.12
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.12"
+
+            - name: Install hatch
+              run: pip install hatch
+
+            - name: Build project for distribution
+              run: hatch build
+
+            - name: Publish a Python distribution to PyPI
+              uses: pypa/gh-action-pypi-publish@release/v1
+              with:
+                  password: ${{ secrets.PYPI_API_TOKEN }}
