@@ -1,0 +1,9 @@
+name: dummy_repo_1111
+channels:
+  - pytorch
+  - conda-forge
+dependencies:
+  - python=3.10.8
+  - pip
+  - rasterio
+
