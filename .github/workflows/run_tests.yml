@@ -65,7 +65,7 @@ jobs:
       - name: Test with tox
         shell: bash -l {0}
         run: |
-          conda activate dummy_repo_111
+          conda activate dummy_repo_1111
           pip install -e '.[testing]'
           pip install tox tox-gh-actions
           tox
