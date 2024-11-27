@@ -61,14 +61,13 @@ jobs:
         run: mamba env update -n dummy_repo_1111 -f environment.yml
         if: steps.cache.outputs.cache-hit != 'true'
 
-      # this runs the platform-specific tests declared in tox.ini
-      - name: Test with tox
+      # this runs the platform-specific tests
+      - name: Test
         shell: bash -l {0}
         run: |
           conda activate dummy_repo_1111
           pip install -e '.[testing]'
-          pip install tox tox-gh-actions
-          tox
+          pytest --color=yes --cov=dummy --cov-config=pyproject.toml --cov-report=xml --cov-report=term-missing
         env:
           PLATFORM: ${{ matrix.os }}
 
